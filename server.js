@@ -1,4 +1,4 @@
-import app from './routes/express.js'
+import app from './express.js'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import config from "./config/config.js";
@@ -12,12 +12,12 @@ mongoose.connect(config.mongoUri)
     console.log("Connected to the database!");
    });
 
-
 mongoose.connection.on("error", () => {
 	throw new Error(`Unable to connect to database: ${config.mongoUri}`);
 });
 
 app.get("/", (req, res) => {
+    console.log('here')
     res.json({message: "Welcome to app"});
 })
 

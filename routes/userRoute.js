@@ -1,6 +1,6 @@
 import express from 'express'
-import userController from '../controllers/userController'
-import authController from '../controllers/authController'
+import authController from '../controllers/authController.js'
+import userController from '../controllers/userController.js'
 
 const router = express.Router()
 router.route('/').post(userController.create)

@@ -1,14 +1,16 @@
 import mongoose from 'mongoose' 
 
 const incidentSchema = new mongoose.Schema({
-  name: {type: String, required: true},
+  title: {type: String, required: true},
   category: { type: String, required: true },
-  prioritization: { type: String, required: true, enum: ['low', 'medium', 'high'] },
+  severity: { type: String, required: true, enum: ['low', 'medium', 'high'] },
   description: { type: String, required: true },
   comments: { type: String },
+  reportedBy: {type: mongoose.Schema.ObjectId, ref: 'User'},
+  status: { type: String, required: true, enum: ['open', 'closed', 'in progress'] },
   dateCreated: { type: Date, default: Date.now },
   dateUpdated: { type: Date, default: Date.now },
-  status: { type: String, required: true, enum: ['create', 'in process', 'attended'] }
+  
 });
 
 const Incident = mongoose.model('Incident', incidentSchema)

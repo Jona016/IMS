@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken';
-import config from '../config/config'
+import { expressjwt } from "express-jwt"
+import config from '../config/config.js'
+import User from '../models/userModel.js'
 
 const signin = async (req, res) => { 
   try {
     let user = await User.findOne({ "email": req.body.email }) 
+    return res.status(401).json({user})
     if (!user)
       return res.status(401).json({ error: "User not found" }); 
 
@@ -22,6 +25,7 @@ const signin = async (req, res) => {
       }
     });
   } catch (err) {
+    console.log(err)
     return res.status(401).json({ error: "Could not sign in" });
   }
 }
@@ -49,4 +53,4 @@ const hasAuthorization = (req, res, next) => {
   next();
 }
 
-export { signin, signout, requireSignin, hasAuthorization };
+export default { signin, signout, requireSignin, hasAuthorization };

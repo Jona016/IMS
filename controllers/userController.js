@@ -1,6 +1,8 @@
 import User from '../models/userModel.js'
 import extend from 'lodash/extend.js'
 import errorHandler from './errorController.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
 
 const create = async (req, res) => {
     try {
@@ -12,7 +14,8 @@ const create = async (req, res) => {
         });
        
         const newUser = await user.save();
-        res.status(201).json(newUser);
+        const token = generateToken(newUser);
+        res.status(201).json({ user: newUser, token });
       } catch (error) {
         res.status(400).json({ message: error.message });
       }
@@ -24,6 +27,7 @@ const list = async (req, res) => {
         const users = await User.find();
         res.json(users);
       } catch (error) {
+        //console.log("gbjhkn")
         res.status(500).json({ message: error.message });
       }
 }
@@ -79,6 +83,11 @@ const remove = async (req, res) => {
             error: errorHandler.getErrorMessage(err)
         })
     }
+}
+
+function generateToken(user) {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return token;
 }
 
 export default { create, list, listId, update, remove, read}
