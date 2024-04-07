@@ -10,18 +10,17 @@
 // };
 
 const handleError = (err, req, res) => {
-    if (err){
-        return res.status(400).json({
-            error: gerErrorMessage(err)
-        })
-    }
+	if (err) {
+		return res.status(400).json({
+			error: getErrorMessage(err)
+		});
+	}
+};
+const getErrorMessage= (errMsg) => {
+	console.error(errMsg);
 }
 
-const getErrorMessage = (errMsg) => {
-    console.error(errMsg)
-}
-
-export default {
-    handleError: handleError,
-    getErrorMessage: getErrorMessage
-}
+export default  {
+	handleError: handleError,
+	getErrorMessage:getErrorMessage
+};

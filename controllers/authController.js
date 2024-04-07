@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken';
-import { expressjwt } from "express-jwt"
+import { expressjwt } from "express-jwt";
 import config from '../config/config.js'
 import User from '../models/userModel.js'
 
 const signin = async (req, res) => { 
   try {
     let user = await User.findOne({ "email": req.body.email }) 
-    return res.status(401).json({user})
     if (!user)
       return res.status(401).json({ error: "User not found" }); 
 

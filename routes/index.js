@@ -4,6 +4,7 @@ import userRouter from './userRoute.js';
 
 const router = express.Router();
 
+// Mount routers
 router.use('/auth', authRouter);
 router.use('/api/users', userRouter);
 
