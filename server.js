@@ -12,12 +12,12 @@ mongoose.connect(config.mongoUri)
     console.log("Connected to the database!");
    });
 
-
 mongoose.connection.on("error", () => {
 	throw new Error(`Unable to connect to database: ${config.mongoUri}`);
 });
 
 app.get("/", (req, res) => {
+    console.log('here')
     res.json({message: "Welcome to app"});
 })
 

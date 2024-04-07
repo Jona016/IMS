@@ -5,12 +5,13 @@ import compress from "compression";
 import cors from "cors";
 import helmet from "helmet";
 import Template from '../template.js'
+import routes from './index.js'
 
 const app = express()
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/",Template);
+app.use("/",routes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
