@@ -2,27 +2,17 @@ import jwt from 'jsonwebtoken';
 import { expressjwt } from "express-jwt";
 import config from '../config/config.js'
 import User from '../models/userModel.js'
+import Incident from '../models/incidentModel.js';
+import helpers from '../helpers/auth.js'
+
 
 const signin = async (req, res) => { 
   try {
     let user = await User.findOne({ "email": req.body.email }) 
-    if (!user)
-      return res.status(401).json({ error: "User not found" }); 
+    const token = generateToken(user);
 
-    if (!user.authenticate(req.body.password)) {
-      return res.status(401).send({ error: "Email and password don't match." });
-    }
-
-    const token = jwt.sign({ _id: user._id }, config.jwtSecret); 
-    res.cookie('t', token, { expire: new Date() + 9999 }); 
-    return res.json({
-      token, 
-      user: {
-        _id: user._id, 
-        name: user.name,
-        email: user.email 
-      }
-    });
+    return  res.status(200).json({ user, token }); 
+   
   } catch (err) {
     console.log(err)
     return res.status(401).json({ error: "Could not sign in" });
@@ -52,4 +42,32 @@ const hasAuthorization = (req, res, next) => {
   next();
 }
 
-export default { signin, signout, requireSignin, hasAuthorization };
+const authorizeUser = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader.split(' ')[1];
+        // You can now use the extracted token
+  req.token = token;
+  const userId = helpers.getTokenUserId(req.token)
+  const reqUserId = req.params.userId;
+  if (userId != reqUserId){
+    return false;
+  }
+  // const userId = req.user.id;
+
+/*   Incident.findById(incidentId, (err, incident) => {
+    if (err || !incident) {
+      return res.status(404).json({ message: 'Incident not found' });
+    }
+    if (incident.reportedBy !== userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+  }); */
+  next(); 
+};
+
+function generateToken(user) {
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+  return token;
+}
+
+export default { signin, signout, requireSignin, hasAuthorization, authorizeUser };

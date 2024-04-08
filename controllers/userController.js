@@ -10,6 +10,7 @@ const create = async (req, res) => {
         const user = new User({
           name: req.body.name,
           email: req.body.email,
+          role: req.body.role,
           password: hashedPassword
         });
        
@@ -27,7 +28,6 @@ const list = async (req, res) => {
         const users = await User.find();
         res.json(users);
       } catch (error) {
-        //console.log("gbjhkn")
         res.status(500).json({ message: error.message });
       }
 }
@@ -86,7 +86,7 @@ const remove = async (req, res) => {
 }
 
 function generateToken(user) {
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     return token;
 }
 
